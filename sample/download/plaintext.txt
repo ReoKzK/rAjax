@@ -1,0 +1,2 @@
+﻿This is just a plain text file.
+You requested it via AJAX using rAjax!

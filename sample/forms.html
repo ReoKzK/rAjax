@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>rAjax :: Sample :: Forms</title>
+
+		<link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+		<script type="text/javascript" src="../src/rajax.js"></script>
+		<script type="text/javascript" src="../src/lang_defs.js"></script>
+		<script type="text/javascript">
+		// <![CDATA[
+			
+			rajax = new rAjax();
+			rajax.lang = lang;
+			rajax.debugMode = true;
+			rajax.run();
+		
+		// ]]>
+		</script>
+		
+		<script type="text/javascript">
+		// <![CDATA[
+			
+			var rajax_form = null;
+			var form_output = null;
+			
+			/**
+			 *  Function executed when page loads
+			 */
+			function start()
+			{
+				rajax_form = document.getElementById('rajax_form');
+				form_output = document.getElementById('form_output');
+			}
+			
+			/**
+			 *  Function executed when loading
+			 */
+			function loading()
+			{
+				rajax_form.className = "loading";
+				document.body.style.cursor = "progress";
+			}
+			
+			/**
+			 *  Function to stop displaying loading progress
+			 */
+			function undisplayWaiting()
+			{
+				rajax_form.className = "";
+				document.body.style.cursor = "auto";
+			}
+			
+			/**
+			 *  Function to show message
+			 */
+			function showMessage(message)
+			{
+				form_output.style.display = "block";
+				form_output.innerHTML = message;
+				
+				hideForm();
+			}
+			
+			function hideMessage()
+			{
+				form_output.style.display = "none";
+				
+				showForm();
+			}
+			
+			function showForm()
+			{
+				rajax_form.style.display = "block";
+			}
+			
+			function hideForm()
+			{
+				rajax_form.style.display = "none";
+			}
+			
+			/**
+			 *  Function to handle delivered XML file
+			 */
+			function handleXML(xmlData)
+			{
+				// - Get XML document element. -
+				var xmlRoot = xmlData.documentElement;
+	
+				// - Read status. -
+				var status = xmlRoot.getElementsByTagName("status");
+				status = status.item(0).firstChild.data;
+				
+				if ( status == 0 )
+				{
+					showMessage("<h1>Error!</h1>" + "<p class=\"ok\"><input type=\"button\" onclick=\"hideMessage();\" value=\"OK\" /></p>");
+				}
+				
+				else if ( status == 1 )
+				{
+					var login = xmlRoot.getElementsByTagName("login");
+					login = login.item(0).firstChild.data;
+					
+					// -- TODO: deactivate html tags in login : <em>T</em> -> &lt;em&gt;T&lt;/em&gt;
+					
+					var message = xmlRoot.getElementsByTagName("message");
+					message = message.item(0).firstChild.data;
+			
+					showMessage(message + "<span class=\"info\">Message for " + login + "</span>" + "<p class=\"ok\"><input type=\"button\" onclick=\"hideMessage();\" value=\"OK\" /></p>");
+				}
+				
+				undisplayWaiting();
+			}
+			
+			/**
+			 *  Function to show user friendly error message
+			 */
+			function showError()
+			{
+				showMessage('Sorry, an error has occured.');
+			
+				undisplayWaiting();
+			}
+			
+			/**
+			 *  Validate form field
+			 */
+			function validate(inputValue, fieldID)
+			{
+				// - Encode content -
+				inputValue = encodeURIComponent(inputValue);
+				fieldID = encodeURIComponent(fieldID);
+			
+				// - Make request. -
+				rajax.open (
+					"form-validate-ajax.php", 
+					"post", 
+					"xml", 
+					function(data) { readValidation(data); }, 
+					function() { alert("error!"); }, 
+					null, 
+					"inputValue=" + inputValue + "&fieldID=" + fieldID
+				);
+			}
+
+			/**
+			 *  Reads form validation response
+			 */
+			function readValidation(xmlData)
+			{
+				// - Pobranie elementu dokumentu. -
+				var xmlDoc = xmlData.documentElement;
+	
+				var result = xmlDoc.getElementsByTagName("result")[0].firstChild.data;
+				var fieldID = xmlDoc.getElementsByTagName("fieldid")[0].firstChild.data;
+		
+				//if ( xmlDoc.getElementsByTagName("message")[0].firstChild )
+				validateMessage = xmlDoc.getElementsByTagName("message")[0].firstChild.data;
+	
+				// - Znalezienie elementu HTML zawieraącego opis błędu. -
+				var message = document.getElementById(fieldID + "_error");
+				
+				// - Wyświetlenie komunikatu. -
+				if ( result == "0" )
+				{
+					message.className = "error";
+					message.innerHTML = validateMessage;
+				}
+		
+				else
+				{
+					message.className = "ok";
+					message.innerHTML = "";
+				}
+			}
+
+			
+		// ]]>
+		</script>
+		
+	</head>
+	
+	<body onload="start();">
+
+		<div id="container">
+			<div id="header"><h1>rAjax Sample</h1></div>
+			<div id="menu">
+				<ul>
+					<li><a href="index.html">Download Data</a></li>
+					<li class="selected"><a href="forms.html">Submit Form</a></li>
+				</ul>
+			</div>
+			<div id="content">
+				
+				<div id="form_output"></div>
+				
+				<form id="rajax_form" action="form-reader.php" method="post" onsubmit="return !rajax.sendForm(this, 'form-reader-ajax.php', 'xml', function(data){ handleXML(data); }, function(){ showError(); }, function(){ loading(); });">
+				
+					<fieldset>
+				
+						<h2>Submit Form with Live Validation via AJAX</h2>
+						
+						<p><label for="login">Login:</label>		<input type="text" id="login" name="login" onblur="validate(this.value, this.id);" /><span id="login_error" class="error"></span></p>
+						<p><label for="password">Password:</label>	<input type="password" id="password" name="password" onblur="validate(this.value, this.id);" /><span id="password_error" class="error"></span></p>
+						<p><label for="email">Email:</label>		<input type="text" id="email" name="email" onblur="validate(this.value, this.id);" /><span id="email_error" class="error"></span></p>
+						
+						<p><label>Interests:</label>				<div class="box">
+																		<span><input type="checkbox" id="programing" name="programing" /><label for="programing">Programing</label></span>
+																		<span><input type="checkbox" id="webmastering" name="webmastering" /><label for="webmastering">Webmastering</label></span>
+																	</div></p>
+						
+						<p><label>Gender:</label>					<div class="box">
+																		<span><input type="radio" name="gender" id="male" value="male" /><label for="male">Male</label></span>
+																		<span><input type="radio" name="gender" id="female" value="female" /><label for="female">Female</label></span>
+																	</div></p>
+						
+						<p><label for="surfingweb">Surfing on Web:</label>	<select id="surfingweb" name="surfingweb">
+																				<option value="often">Often</option>
+																				<option value="sometimes">Sometimes</option>
+																				<option value="seldom">Seldom</option>
+																			</select></p>
+						
+						<p><label for="food">Food you like:</label>	<select multiple="multiple" id="food[]" name="food[]">
+																				<option value="chinese">Chinese</option>
+																				<option value="greek">Greek</option>
+																				<option value="fast">Fast Food</option>
+																			</select></p>
+						
+						<p><label for="about">About you:</label>	<textarea id="about" name="about"></textarea></p>
+						
+						<input type="hidden" id="from" name="from" value="rAjax submit form" />
+						
+						<p><input type="submit" value="Send" /></p>
+						
+					</fieldset>
+				
+				</form>
+				
+			</div>
+		</div>
+		
+	
+	</body>
+</html>

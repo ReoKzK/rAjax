@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>rAjax :: Sample</title>
+
+		<link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+		<script type="text/javascript" src="../src/rajax.js"></script>
+		<script type="text/javascript" src="../src/lang_defs.js"></script>
+		<script type="text/javascript">
+		// <![CDATA[
+			
+			rajax = new rAjax();
+			rajax.lang = lang;
+			rajax.debugMode = true;
+			rajax.run();
+			
+		// ]]>
+		</script>
+		
+		<script type="text/javascript">
+		// <![CDATA[
+			
+			/**
+			 *  Function executed when loading
+			 */
+			function loading()
+			{
+				document.getElementById('output').className = "loading";
+				document.body.style.cursor = "progress";
+			}
+			
+			/**
+			 *  Function to stop displaying progress
+			 */
+			function undisplayWaiting()
+			{
+				document.getElementById('output').className = "";
+				document.body.style.cursor = "auto";
+			}
+			
+			/**
+			 *  Function to handle delivered text file
+			 */
+			function handleText(text)
+			{
+				var error = checkIfTextError(text);
+				
+				if ( error != null )
+					alert(error);
+			
+				document.getElementById('output').innerHTML = text;
+				undisplayWaiting();
+			}
+			
+			/**
+			 *  Function to handle delivered XML file
+			 */
+			function handleXML(xmlData)
+			{
+				var xmlResponse = xmlData;
+				
+				// - Pobranie elementu dokumentu XML. -
+				var xmlRoot = xmlResponse.documentElement;
+	
+				// - Pobranie zawartości strony. -
+	
+				var first = xmlRoot.getElementsByTagName("first");
+				first = first.item(0).firstChild.data;
+				
+				var second = xmlRoot.getElementsByTagName("second");
+				second = second.item(0).firstChild.data;
+			
+				document.getElementById('output').innerHTML = "<h1>" + first + "</h1><p>" + second + "</p>";
+				undisplayWaiting();
+			}
+			
+			/**
+			 *  Function to show user friendly error message
+			 */
+			function showError()
+			{
+				document.getElementById('output').innerHTML = 'Sorry, an error has occured.';
+				undisplayWaiting();
+			}
+			
+			/**
+			 *  checkIfTextError()
+			 *  Checking if server send a text file with error message.
+			 */
+			function checkIfTextError(responseText)
+			{
+				if ( responseText.indexOf("ERRNO") >= 0 || responseText.indexOf("error:") >= 0 || responseText.length == 0 )
+					return ( responseText.length == 0 ? rajax._("error_server") + "!" : responseText );
+				else
+					return null;
+			}
+			
+		// ]]>
+		</script>
+		
+	</head>
+	
+	<body>
+
+		<div id="container">
+			<div id="header"><h1>rAjax Sample</h1></div>
+			<div id="menu">
+				<ul>
+					<li class="selected"><a href="index.html">Download Data</a></li>
+					<li><a href="forms.html">Submit Form</a></li>
+				</ul>
+			</div>
+			
+			<div id="content">
+				<pre id="output"></pre>
+			
+				<div id="buttons">
+					<input type="button" onclick="rajax.open('download/plaintext.txt', 'get', 'text', function(data){ document.getElementById('output').innerHTML = data; undisplayWaiting(); }, function(){ document.getElementById('output').innerHTML = 'Sorry, an error has occured.'; undisplayWaiting(); }, function(){ loading(); });" value="Download Data" />
+					<input type="button" onclick="rajax.open('download/somexhtml.htm', 'get', 'text', function(data){ handleText(data); }, function(){ showError(); }, function(){ loading(); });" value="Download Another Data" />
+					<input type="button" onclick="rajax.open('download/somexml.xml', 'get', 'xml', function(data){ handleXML(data); }, function(){ showError(); }, function(){ loading(); });" value="Download XML" />
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>

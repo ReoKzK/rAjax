@@ -1,0 +1,206 @@
+﻿
+	/** --------------------------------- **
+	 *               rAjax                 *
+	 * ----------------------------------- *
+	 * File : style.css                    *
+	 * CSS stylesheet for rAjax Sample     *
+	 * @author Reo Fox reo.fox@gmail.com   *
+	 ** --------------------------------- **
+	*/
+	
+body {
+	font: normal normal 13px Arial, Verdana, Helvetica, sans-serif;
+	margin: auto;
+	text-align: center;
+	color: #444444;
+	background: #ffffff;
+}
+
+a:link {
+	color: #a0c2f8;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #acc6f4;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #40d1ff;
+}
+
+a:active {
+	color: #87cefa;
+}
+
+
+div#container {
+	width: 510px;
+	margin: 10px auto 10px auto;
+	border: 1px none gray;
+	padding: 0px;
+}
+
+div#header {
+	text-align: center;
+	margin: 10px 0px 10px 0px;
+}
+
+div#menu ul {
+	text-align: center;
+	margin: 0px 20px;
+	padding: 0;
+	overflow: hidden;
+}
+
+div#menu ul li {
+	display: inline;
+	float: left;
+	height: 22px;
+	padding: 0 4px 0 0;
+}
+
+div#menu ul li a {
+	display: block;
+	padding: 4px 10px 5px;
+	background-color: #e0f1fa;
+	border-top: 1px solid #b3dbf8;
+	border-left: 1px solid #b3dbf8;
+	border-right: 1px solid #b3dbf8;
+	text-decoration: none;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 0.7em;
+}
+
+div#menu ul li a:link {
+	color: #69a0f8;
+}
+
+div#menu ul li a:visited {
+	color: #89aff4;
+}
+
+div#menu ul li a:hover {
+	background-color: #cee8fb;
+	color: #6495ed;
+}
+
+div#menu ul li.selected a {
+	background-color: #d8eef9;
+	font-weight: bold;
+}
+
+
+div#content {
+	text-align: left;
+	margin: 0px 0px 10px 0px;
+}
+
+div#content p {
+	text-align: left;
+}
+
+pre#output {
+	width: 500px;
+	height: 250px;
+	border: 1px dashed gray;
+	padding: 3px 4px;
+	margin: 0 0 10px;
+	text-align: left;
+	background-color: #f4fbff;
+	cursor: text;
+}
+
+div#buttons {
+	text-align: center;
+}
+
+.loading {
+	background: #f4fbff url(../gfx/spinner.gif) no-repeat scroll 99% 2%;
+}
+
+pre#output h1 {
+	margin: 3px 4px;
+}
+
+pre#output p {
+	margin: 3px 4px;
+}
+
+form#rajax_form fieldset {
+	border: 1px dashed #e3e3e3;
+	text-align: left;
+	margin: 0;
+	padding: 3px 16px;
+}
+
+form#rajax_form fieldset h2 {
+	margin: 10px 0;
+	font-size: 1.1em;
+}
+
+form#rajax_form fieldset p {
+	margin: 15px 0;
+}
+
+form#rajax_form fieldset p label {
+	width: 100px;
+	display: block;
+	float: left;
+}
+
+form#rajax_form fieldset p span.error {
+	color: red;
+	padding: 0 8px;
+}
+
+form#rajax_form fieldset p span.ok {
+	
+}
+
+div.message {
+	border: 1px dashed #e3e3e3;
+	padding: 2px 20px;
+}
+	
+div.message h1 {
+	margin: 10px 0;
+}
+
+div#form_output {
+	display: none;
+	font-size: 0.85em;
+	border: 1px dashed #e3e3e3;
+	background-color: #e5f1fd;
+	padding: 2px 16px;
+	margin: 7px 2px;
+	position: relative;
+}
+
+div#form_output h1 {
+	margin: 10px 0;
+}
+
+div#form_output span.info {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	padding: 3px 6px;
+	color: #aad2f9;
+	border-bottom: 1px dashed #aed4f9;
+	border-left: 1px dashed #aed4f9;
+	background-color: #ebf5fd;
+}
+
+div#form_output p.ok {
+	text-align: center;
+}
+
+div#form_output p.ok input {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	height: 30px;
+	width: 80px;
+}

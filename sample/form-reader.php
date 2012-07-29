@@ -72,13 +72,13 @@
 		<title>rAjax :: Sample :: Forms</title>
 
 		<link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
-		<script type="text/javascript" src="../src/rajax.js"></script>
-		<script type="text/javascript" src="../src/lang_defs.js"></script>
+		<script type="text/javascript" src="../src/rajax-0.1.1b.js"></script>
+		<script type="text/javascript" src="../src/lang_defs/en.js"></script>
 		<script type="text/javascript">
 		// <![CDATA[
 			
 			rajax = new rAjax();
-			rajax.lang = lang;
+			rajax.lang = rAjax_lang;
 			rajax.debugMode = true;
 			rajax.run();
 			
